@@ -13,9 +13,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.bidding.bidder.entity.Bidder;
 import com.bidding.bidder.repository.BidderRepository;
+import com.bidding.bidder.restCallHandler.UserClient;
 
 @ExtendWith(MockitoExtension.class)
 class BidderServiceImplTest {
@@ -25,6 +28,9 @@ class BidderServiceImplTest {
 
     @InjectMocks
     private BidderServiceImpl bidderService;
+    
+    @Mock
+	private UserClient userClient;
 
     private Bidder bidder;
 
@@ -38,6 +44,7 @@ class BidderServiceImplTest {
 
     @Test
     void testCreateBidder() {
+    	when(userClient.getUserById(bidder.getUserId())).thenReturn(new ResponseEntity<>(bidder, HttpStatus.OK) );
         when(bidderRepository.save(bidder)).thenReturn(bidder);
 
         Bidder result = bidderService.createBidder(bidder);
